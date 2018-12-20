@@ -10,6 +10,7 @@ setup(
         'flask',
         'bs4',
         'configparser',
+        'pathlib',
     ],
     entry_points='''
         [console_scripts]

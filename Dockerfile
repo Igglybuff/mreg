@@ -1,6 +1,6 @@
 FROM python:3.7
 
-RUN git clone "https://github.com/Igglybuff/mreg" /app
+COPY . /app
 
 WORKDIR /app
 RUN pip3 install -r requirements.txt

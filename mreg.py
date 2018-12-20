@@ -5,6 +5,9 @@ import requests
 import configparser
 from bs4 import BeautifulSoup
 import click
+from pathlib import Path
+import re
+import sys
 
 
 def scrape_releases():
@@ -28,15 +31,41 @@ def scrape_releases():
     return movie_names
 
 
+def get_abs_path(file):
+    file = Path(file)
+    return file.resolve(strict=True)
+
+
 def update_autodl_cfg(expression, autodlcfg, filter_name):
+    autodlcfg_abs = get_abs_path(autodlcfg)
     new_expression = ''.join(expression)
     config = configparser.ConfigParser()
-    config.read(autodlcfg)
+    config.read(get_abs_path(autodlcfg_abs))
     config[filter_name]['match-releases'] = new_expression
-    with open(autodlcfg, 'w') as configfile:
+    with open(get_abs_path(autodlcfg_abs), 'w') as configfile:
         config.write(configfile)
 
-    return True
+
+def fix_filter(filter_name):
+    # if first word of filter is not "filter",
+    # prepend expression with "filter "
+    pass
+
+
+def check_config(autodlcfg, filter_name):
+    config = configparser.ConfigParser()
+    config.read(get_abs_path(autodlcfg))
+    if not filter_name in config:
+        raise configparser.Error('Unable to find filter "' + filter_name + '" in ' + autodlcfg)
+
+
+def check_regex_validity(expression):
+    new_expression = ''.join(expression)
+    try:
+        re.compile(new_expression)
+    except re.error:
+        click.echo('ERROR - mreg generated an invalid regex.')
+        sys.exit(1)
 
 
 @click.command()
@@ -44,8 +73,10 @@ def update_autodl_cfg(expression, autodlcfg, filter_name):
 @click.option('-f', '--filter', 'filter', envvar='MREG_FILTER_NAME', required=True, help='The name of your autodl-irssi filter for movies.')
 def mreg(autodlcfg, filter):
     expression = scrape_releases()
+    check_regex_validity(expression)
+    fix_filter(filter)
+    check_config(autodlcfg, filter)
     update_autodl_cfg(expression, autodlcfg, filter)
     click.echo('Your filter was updated successfully!')
 
 # TODO: add "live" mode which triggers every x minutes
-

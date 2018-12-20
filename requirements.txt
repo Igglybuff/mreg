@@ -3,3 +3,4 @@ flask
 bs4
 configparser
 click
+pathlib
