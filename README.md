@@ -66,7 +66,7 @@ You must map your `autodl.cfg` file into the container with `-v /path/to/your/au
 
 #### `docker run`
 
-`$ docker run -it --rm --name mreg -v /path/to/your/autodl.cfg:/root/.autodl/autodl.cfg -e MREG_FILTER_NAME="filter 1080p/720p Movies IPT" -e MREG_AUTODLCFG_PATH=/root/.autodl/autodl.cfg igglybuff/mreg:latest`
+`$ docker run -it --rm --name mreg -v /path/to/your/autodl.cfg:/root/.autodl/autodl.cfg -e MREG_FILTER_NAME="filter 1080p/720p Movies IPT" -e MREG_AUTODLCFG_PATH=/root/.autodl/autodl.cfg wigglytuff/mreg:latest`
 
 Replace `-it --rm` with `-d` when you are confident it is working.
 
@@ -78,7 +78,7 @@ version: '3'
 services:
   mreg:
     container_name: mreg
-    image: "igglybuff/mreg:latest"
+    image: "wigglytuff/mreg:latest"
     volumes:
       - /path/to/your/autodl.cfg:/root/.autodl/autodl.cfg
     environment:
