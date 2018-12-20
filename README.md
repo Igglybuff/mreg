@@ -60,4 +60,28 @@ export MREG_FILTER_NAME="filter 1080p/720p Movies IPT"
 
 ### Docker
 
-`coming soon`
+`mreg` can run in a docker container and trigger at your desired frequency. The frequency interval is configured with the `INTERVAL` environment variable, e.g. `-e INTERVAL=21600` would update your `autodl.cfg` every six hours. The default is 7200 seconds (2 hours).
+
+You must map your `autodl.cfg` file into the container with `-v /path/to/your/autodl.cfg:/root/.autodl/autodl.cfg`. If you want to put `autodl.cfg` somewhere else inside the container, make sure you set the `MREG_AUTODLCFG_PATH` environment variable too with `-e MREG_AUTODLCFG_PATH=/path/to/container/autodl.cfg`.
+
+#### `docker run`
+
+`$ docker run -it --rm --name mreg -v /path/to/your/autodl.cfg:/root/.autodl/autodl.cfg -e MREG_FILTER_NAME="filter 1080p/720p Movies IPT" -e MREG_AUTODLCFG_PATH=/root/.autodl/autodl.cfg igglybuff/mreg:latest`
+
+Replace `-it --rm` with `-d` when you are confident it is working.
+
+#### `docker-compose`
+
+```
+version: '3'
+
+services:
+  mreg:
+    container_name: mreg
+    image: "igglybuff/mreg:latest"
+    volumes:
+      - /path/to/your/autodl.cfg:/root/.autodl/autodl.cfg
+    environment:
+      - MREG_FILTER_NAME="filter 1080p/720p Movies IPT"
+    restart: always
+```
