@@ -27,17 +27,7 @@ def scrape_releases():
     soup = BeautifulSoup(page.text, 'html.parser')
     requested_table = soup.find("div", {"id": 'requested'})
     requested_hrefs = requested_table.find_all('a')
-    movie_names_raw = []
-
-    for movie in requested_hrefs:
-        name = movie.contents[0]
-        movie_names_raw.append(name)
-
-    movie_names_starred = [ movie + "*," for movie in movie_names_raw ]
-    movie_names = []
-
-    for movie in movie_names_starred:
-        movie_names.append(movie.replace(' ', '?'))
+    movie_names = [ movie.contents[0].replace(' ', '?') + "*," for movie in requested_hrefs ]
 
     return movie_names
 
