@@ -47,6 +47,7 @@ Options:
   -f, --filter TEXT     The name of your autodl-irssi filter for movies.
                         [required]
   --help                Show this message and exit.
+$ mreg --autodlcfg "/home/rtorrent/.autodl/autodl.cfg" --filter "filter 1080p/720p Movies IPT"
 ```
 
 You can use environment variables instead of command line options instead if you prefer:
