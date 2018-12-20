@@ -47,9 +47,10 @@ def update_autodl_cfg(expression, autodlcfg, filter_name):
 
 
 def fix_filter(filter_name):
-    # if first word of filter is not "filter",
-    # prepend expression with "filter "
-    pass
+    if filter_name.startswith("filter"):
+        return filter_name
+    else:
+        return 'filter ' + filter_name
 
 
 def check_config(autodlcfg, filter_name):
@@ -74,7 +75,7 @@ def check_regex_validity(expression):
 def mreg(autodlcfg, filter):
     expression = scrape_releases()
     check_regex_validity(expression)
-    fix_filter(filter)
+    filter = fix_filter(filter)
     check_config(autodlcfg, filter)
     update_autodl_cfg(expression, autodlcfg, filter)
     click.echo('Your filter was updated successfully!')
