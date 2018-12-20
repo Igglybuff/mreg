@@ -30,12 +30,10 @@ def scrape_releases():
 
 def update_autodl_cfg(expression, autodlcfg, filter_name):
     new_expression = ''.join(expression)
-    autodl_cfg_path = autodlcfg
-    filter_name = filter_name
     config = configparser.ConfigParser()
-    config.read(autodl_cfg_path)
+    config.read(autodlcfg)
     config[filter_name]['match-releases'] = new_expression
-    with open(autodl_cfg_path, 'w') as configfile:
+    with open(autodlcfg, 'w') as configfile:
         config.write(configfile)
 
     return True
