@@ -2,15 +2,9 @@
 
 from flask import Flask, Response
 import requests
+import configparser
 from bs4 import BeautifulSoup
-
-app = Flask(__name__)
-
-
-@app.route("/")
-def index():
-    resp = scrape_releases()
-    return Response(resp, mimetype='text/plain')
+import click
 
 
 def scrape_releases():
@@ -34,6 +28,26 @@ def scrape_releases():
     return movie_names
 
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=False)
+def update_autodl_cfg(expression, autodlcfg, filter_name):
+    new_expression = ''.join(expression)
+    autodl_cfg_path = autodlcfg
+    filter_name = filter_name
+    config = configparser.ConfigParser()
+    config.read(autodl_cfg_path)
+    config[filter_name]['match-releases'] = new_expression
+    with open(autodl_cfg_path, 'w') as configfile:
+        config.write(configfile)
+
+    return True
+
+
+@click.command()
+@click.option('-c', '--autodlcfg', 'autodlcfg', envvar='MREG_AUTODLCFG_PATH', default='~/.autodl/autodl.cfg', show_default=True, help='The path to your autodl.cfg file.')
+@click.option('-f', '--filter', 'filter', envvar='MREG_FILTER_NAME', required=True, help='The name of your autodl-irssi filter for movies.')
+def mreg(autodlcfg, filter):
+    expression = scrape_releases()
+    update_autodl_cfg(expression, autodlcfg, filter)
+    click.echo('Your filter was updated successfully!')
+
+# TODO: add "live" mode which triggers every x minutes
 
