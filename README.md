@@ -48,6 +48,7 @@ Options:
                         [required]
   --help                Show this message and exit.
 $ mreg --autodlcfg "/home/rtorrent/.autodl/autodl.cfg" --filter "filter 1080p/720p Movies IPT"
+Your filter was updated successfully!
 ```
 
 You can use environment variables instead of command line options instead if you prefer:
